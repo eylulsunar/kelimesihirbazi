@@ -1,0 +1,27 @@
+<resources>
+    <string name="app_name">Kelime Sihirbazı</string>
+    <string name="kullanici_adi">Büyücü Adı</string>
+    <string name="sifre">Gizli Parola</string>
+    <string name="giris_yap">Geçit Kapısını Aç</string>
+    <string name="kayit_ol_metni">Asan yok mu? Sihre Katıl (Kayıt Ol)</string>
+    <string name="yeni_kayit_baslik">Yeni Sihirbaz Kaydı</string>
+    <string name="kaydi_tamamla">Aramıza Katıl</string>
+    <string name="hata_bos_alan">Sihirli sözcükleri boş bırakamazsın!</string>
+    <string name="kayit_basarili">Aramıza hoş geldin sihirbaz!</string>
+    <string name="kayit_hata_mevcut">Bu isimde bir büyücü zaten var!</string>
+    <string name="yeni_kelime_baslik">Yeni Büyü (Kelime) Ekle</string>
+    <string name="ingilizce_kelime">İngilizce Kelime</string>
+    <string name="turkce_anlam">Türkçe Anlamı</string>
+    <string name="ornek_cumle">Örnek Cümle (Opsiyonel)</string>
+    <string name="kelimeyi_kaydet">Büyü Kitabına Ekle</string>
+    <string name="bekleyen_buyuler">Bekleyen Büyüler: %1$d</string>
+    <string name="sirri_aciga_cikar">Sırrı Açığa Çıkar</string>
+    <string name="zihnim_bulandi">Zihnim Bulandı</string>
+    <string name="buyuyu_hatirladim">Büyüyü Hatırladım</string>
+    <string name="yeni_shihirli_s_zc_k_ekle">Yeni Shihirli Sözcük Ekle</string>
+    <string name="yeni_sihirli_s_zc_k_ekle">Yeni Sihirli Sözcük Ekle</string>
+    <string name="yeni_s_zc_k">Yeni Sözcük</string>
+    <string name="ngilizce_kelime">İngilizce Kelime</string>
+    <string name="t_rk_e_anlam">Türkçe Anlamı</string>
+    <string name="rnek_c_mle">Örnek Cümle</string>
+</resources>

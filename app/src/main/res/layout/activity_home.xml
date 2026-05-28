@@ -1,0 +1,78 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#1A110D"
+    android:gravity="center"
+    android:padding="24dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Kelime Sihirbazı"
+        android:textColor="#D4AF37"
+        android:textSize="36sp"
+        android:fontFamily="@font/merienda_light"
+        android:layout_marginBottom="40dp" />
+
+    <Button
+        android:id="@+id/btnSinav"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Sınav"
+        android:textColor="#1A110D"
+        android:backgroundTint="#E5D3B3"
+        android:fontFamily="@font/merienda_light"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnWordle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Sihirli Bulmaca"
+        android:textColor="#1A110D"
+        android:backgroundTint="#E5D3B3"
+        android:fontFamily="@font/merienda_light"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnEkle"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Yeni Büyü Ekle"
+        android:textColor="#1A110D"
+        android:backgroundTint="#E5D3B3"
+        android:fontFamily="@font/merienda_light"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnLlm"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Sihirli Zincir (AI)"
+        android:textColor="#1A110D"
+        android:backgroundTint="#E5D3B3"
+        android:fontFamily="@font/merienda_light"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnAnaliz"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Sihirbaz Başarı Analizi"
+        android:textColor="#1A110D"
+        android:backgroundTint="#E5D3B3"
+        android:fontFamily="@font/merienda_light"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnAyarlar"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Büyü Kitabını Düzenle"
+        android:textColor="#1A110D"
+        android:backgroundTint="#E5D3B3"
+        android:fontFamily="@font/merienda_light"
+        android:layout_marginBottom="16dp"/>
+</LinearLayout>

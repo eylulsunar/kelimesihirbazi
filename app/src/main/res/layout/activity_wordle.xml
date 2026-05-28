@@ -1,0 +1,54 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#F4EBD0"
+    android:gravity="center"
+    android:padding="16dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Sihirli Bulmaca"
+        android:textColor="#2C1E16"
+        android:textSize="32sp"
+        android:fontFamily="@font/merienda_light"
+        android:layout_marginBottom="32dp"/>
+
+    <GridLayout
+        android:id="@+id/wordleGrid"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:columnCount="5"
+        android:rowCount="6"
+        android:layout_gravity="center">
+    </GridLayout>
+
+    <EditText
+        android:id="@+id/etKelimeTahmini"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="5 Harfli Tahmininizi Yazın"
+        android:textColorHint="#8D6E63"
+        android:textColor="#2C1E16"
+        android:background="@null"
+        android:fontFamily="@font/merienda_light"
+        android:textSize="18sp"
+        android:inputType="textCapCharacters"
+        android:maxLength="5"
+        android:gravity="center"
+        android:layout_marginTop="32dp"
+        android:layout_marginBottom="16dp"/>
+
+    <Button
+        android:id="@+id/btnTahminEt"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Tahmini Gönder"
+        android:textColor="#F4EBD0"
+        android:backgroundTint="#2C1E16"
+        android:fontFamily="@font/merienda_light"
+        android:textSize="18sp" />
+
+</LinearLayout>

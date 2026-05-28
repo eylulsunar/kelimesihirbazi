@@ -1,0 +1,122 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#1A110D"
+    android:padding="24dp">
+
+    <TextView
+        android:id="@+id/tvKalanKelime"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:textColor="#D4AF37"
+        android:textSize="18sp"
+        android:fontFamily="@font/merienda_light"
+        android:layout_centerHorizontal="true"
+        android:layout_marginTop="16dp"/>
+
+    <androidx.cardview.widget.CardView
+        android:id="@+id/cardSayfa"
+        android:layout_width="match_parent"
+        android:layout_height="400dp"
+        android:layout_centerInParent="true"
+        app:cardBackgroundColor="#F4EBD0"
+        app:cardCornerRadius="16dp"
+        app:cardElevation="12dp">
+
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:gravity="center"
+            android:orientation="vertical"
+            android:padding="24dp">
+
+            <TextView
+                android:id="@+id/tvKelimeIngilizce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="24dp"
+                android:textColor="#2C1E16"
+                android:textSize="36sp"
+                android:fontFamily="@font/merienda_light"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tvKelimeTurkce"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginBottom="16dp"
+                android:textColor="#5D4037"
+                android:textSize="28sp"
+                android:fontFamily="@font/merienda_light"
+                android:visibility="invisible" />
+
+            <TextView
+                android:id="@+id/tvOrnekCumle"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAlignment="center"
+                android:textColor="#2C1E16"
+                android:textSize="18sp"
+                android:fontFamily="@font/merienda_light"
+                android:visibility="invisible" />
+
+        </LinearLayout>
+    </androidx.cardview.widget.CardView>
+
+    <com.airbnb.lottie.LottieAnimationView
+        android:id="@+id/lottieBurnEffect"
+        android:layout_width="match_parent"
+        android:layout_height="420dp"
+        android:layout_centerInParent="true"
+        app:lottie_autoPlay="false"
+        app:lottie_loop="false"
+        android:elevation="20dp"
+        android:visibility="gone"/>
+
+    <LinearLayout
+        android:id="@+id/layoutKararButonlari"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="horizontal"
+        android:layout_below="@id/cardSayfa"
+        android:layout_marginTop="40dp"
+        android:visibility="gone"
+        android:weightSum="2">
+
+        <Button
+            android:id="@+id/btnYanlis"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:text="@string/zihnim_bulandi"
+            android:textColor="#F4EBD0"
+            android:backgroundTint="#7F1D1D"
+            android:fontFamily="@font/merienda_light"
+            android:layout_marginEnd="8dp"/>
+
+        <Button
+            android:id="@+id/btnDogru"
+            android:layout_width="0dp"
+            android:layout_height="60dp"
+            android:layout_weight="1"
+            android:text="@string/buyuyu_hatirladim"
+            android:textColor="#1A110D"
+            android:backgroundTint="#E5D3B3"
+            android:fontFamily="@font/merienda_light"
+            android:layout_marginStart="8dp"/>
+    </LinearLayout>
+
+    <Button
+        android:id="@+id/btnCevabiGor"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:layout_below="@id/cardSayfa"
+        android:layout_marginTop="40dp"
+        android:text="@string/sirri_aciga_cikar"
+        android:textColor="#1A110D"
+        android:backgroundTint="#E5D3B3"
+        android:fontFamily="@font/merienda_light"/>
+
+</RelativeLayout>

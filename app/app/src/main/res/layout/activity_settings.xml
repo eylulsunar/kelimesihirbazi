@@ -1,0 +1,51 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:background="#1A110D"
+    android:gravity="center"
+    android:padding="32dp">
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Büyü Kitabı Ayarları"
+        android:textColor="#D4AF37"
+        android:textSize="32sp"
+        android:fontFamily="@font/merienda_light"
+        android:layout_marginBottom="32dp" />
+
+    <TextView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:text="Sınavda günlük karşınıza çıkacak yeni büyü sayısını belirleyin:"
+        android:textColor="#E5D3B3"
+        android:textSize="16sp"
+        android:fontFamily="@font/merienda_light"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/etKelimeLimiti"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Örn: 10"
+        android:inputType="number"
+        android:textColorHint="#8D6E63"
+        android:textColor="#E5D3B3"
+        android:background="@null"
+        android:fontFamily="@font/merienda_light"
+        android:textSize="18sp"
+        android:layout_marginBottom="32dp"/>
+
+    <Button
+        android:id="@+id/btnAyarlariKaydet"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Ayarları Mühürle"
+        android:textColor="#1A110D"
+        android:backgroundTint="#E5D3B3"
+        android:fontFamily="@font/merienda_light"
+        android:textSize="18sp" />
+
+</LinearLayout>

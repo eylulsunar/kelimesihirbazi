@@ -1,0 +1,80 @@
+<?xml version="1.0" encoding="utf-8"?>
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    android:gravity="center"
+    android:padding="32dp"
+    android:background="#1A110D"> <TextView
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:text="Kelime Sihirbazı"
+    android:textSize="36sp"
+    android:textColor="#D4AF37"
+    android:fontFamily="@font/merienda_light"
+    android:layout_marginBottom="40dp" />
+
+    <EditText
+        android:id="@+id/etKullaniciAdi"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Büyücü Adı"
+        android:textColorHint="#8D6E63"
+        android:textColor="#E5D3B3"
+        android:inputType="text"
+        android:autofillHints="username"
+        android:background="@null"
+        android:fontFamily="@font/merienda_light"
+        android:textSize="18sp"
+        android:layout_marginBottom="16dp"/>
+
+    <EditText
+        android:id="@+id/etSifre"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:hint="Gizli Parola"
+        android:textColorHint="#8D6E63"
+        android:textColor="#E5D3B3"
+        android:inputType="textPassword"
+        android:autofillHints="password"
+        android:background="@null"
+        android:fontFamily="@font/merienda_light"
+        android:textSize="18sp"
+        android:layout_marginBottom="24dp"/>
+
+    <Button
+        android:id="@+id/btnGirisYap"
+        android:layout_width="match_parent"
+        android:layout_height="60dp"
+        android:text="Kitabı Aç"
+        android:textSize="18sp"
+        android:backgroundTint="#E5D3B3"
+        android:textColor="#1A110D"
+        android:fontFamily="@font/merienda_light"/>
+
+    <TextView
+        android:id="@+id/tvKayitOl"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Yeni Büyücü Kaydı"
+        android:textSize="16sp"
+        android:textColor="#D4AF37"
+        android:layout_marginTop="24dp"
+        android:fontFamily="@font/merienda_light"
+        android:clickable="true"
+        android:focusable="true"/>
+
+    <TextView
+        android:id="@+id/tvSifremiUnuttum"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Parolamı Unuttum"
+        android:textSize="14sp"
+        android:textColor="#8D6E63"
+        android:layout_marginTop="16dp"
+        android:fontFamily="@font/merienda_light"
+        android:clickable="true"
+        android:focusable="true"/>
+
+</LinearLayout>
