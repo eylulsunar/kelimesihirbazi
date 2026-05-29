@@ -8,71 +8,59 @@
     android:padding="32dp">
 
     <TextView
+        android:id="@+id/tvExamTitle"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:text="Büyücü Menüsü"
+        android:text="Sınav"
         android:textColor="#D4AF37"
-        android:textSize="32sp"
+        android:textSize="28sp"
         android:fontFamily="@font/merienda_light"
         android:layout_marginBottom="40dp" />
 
+    <TextView
+        android:id="@+id/tvEngWord"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="Yükleniyor..."
+        android:textColor="#E5D3B3"
+        android:textSize="36sp"
+        android:textStyle="bold"
+        android:fontFamily="@font/merienda_light"
+        android:layout_marginBottom="40dp"/>
+
     <Button
-        android:id="@+id/btnKelimeEkle"
+        android:id="@+id/btnOption1"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="Yeni Kelime Ekle"
         android:textColor="#1A110D"
         android:backgroundTint="#E5D3B3"
         android:fontFamily="@font/merienda_light"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="12dp" />
 
     <Button
-        android:id="@+id/btnSinav"
+        android:id="@+id/btnOption2"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="Sınav Meydanı"
         android:textColor="#1A110D"
         android:backgroundTint="#E5D3B3"
         android:fontFamily="@font/merienda_light"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="12dp" />
 
     <Button
-        android:id="@+id/btnWordle"
+        android:id="@+id/btnOption3"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="Bulmaca (Wordle)"
         android:textColor="#1A110D"
         android:backgroundTint="#E5D3B3"
         android:fontFamily="@font/merienda_light"
-        android:layout_marginBottom="16dp"/>
+        android:layout_marginBottom="12dp" />
 
     <Button
-        android:id="@+id/btnWordChain"
+        android:id="@+id/btnOption4"
         android:layout_width="match_parent"
         android:layout_height="60dp"
-        android:text="Kelime Zinciri (Yapay Zeka)"
         android:textColor="#1A110D"
         android:backgroundTint="#E5D3B3"
-        android:fontFamily="@font/merienda_light"
-        android:layout_marginBottom="24dp"/>
-
-    <Button
-        android:id="@+id/btnAnaliz"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Analiz Raporu"
-        android:textColor="#D4AF37"
-        android:backgroundTint="#3E2723"
-        android:fontFamily="@font/merienda_light"
-        android:layout_marginBottom="12dp"/>
-
-    <Button
-        android:id="@+id/btnAyarlar"
-        android:layout_width="match_parent"
-        android:layout_height="50dp"
-        android:text="Sınav Ayarları"
-        android:textColor="#D4AF37"
-        android:backgroundTint="#3E2723"
         android:fontFamily="@font/merienda_light" />
 
 </LinearLayout>

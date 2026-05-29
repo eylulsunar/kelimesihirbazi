@@ -22,20 +22,19 @@ public class RegisterActivity extends AppCompatActivity {
         Button btnKaydiTamamla = findViewById(R.id.btnKaydiTamamla);
 
         btnKaydiTamamla.setOnClickListener(v -> {
-            String kullaniciAdi = etKullaniciAdi.getText().toString().trim();
-            String sifre = etSifre.getText().toString().trim();
+            String username = etKullaniciAdi.getText().toString().trim();
+            String password = etSifre.getText().toString().trim();
 
-            if (kullaniciAdi.isEmpty() || sifre.isEmpty()) {
-                Toast.makeText(this, "Lütfen gizli parolayı tamamla.", Toast.LENGTH_SHORT).show();
+            if (username.isEmpty() || password.isEmpty()) {
+                Toast.makeText(this, "Lütfen tüm alanları doldur.", Toast.LENGTH_SHORT).show();
                 return;
             }
 
-            boolean basarili = dbHelper.addUser(kullaniciAdi, sifre);
-            if (basarili) {
-                Toast.makeText(this, "Aramıza hoş geldin!", Toast.LENGTH_SHORT).show();
-                finish();
+            if (dbHelper.addUser(username, password)) {
+                Toast.makeText(this, "Büyücü kaydı başarılı!", Toast.LENGTH_SHORT).show();
+                finish(); // Giriş ekranına dön
             } else {
-                Toast.makeText(this, "Bu isimde bir büyücü zaten var.", Toast.LENGTH_SHORT).show();
+                Toast.makeText(this, "Bu isimde bir büyücü zaten kayıtlı.", Toast.LENGTH_SHORT).show();
             }
         });
     }

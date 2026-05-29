@@ -1,13 +1,11 @@
 package com.example.kelimesihirbazi;
 
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
 import android.graphics.Color;
 import android.os.Bundle;
-import android.view.Gravity;
-import android.widget.Button;
+import android.text.Editable;
+import android.text.TextWatcher;
+import android.view.inputmethod.EditorInfo;
 import android.widget.EditText;
-import android.widget.GridLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 import androidx.appcompat.app.AppCompatActivity;
@@ -15,12 +13,9 @@ import androidx.appcompat.app.AppCompatActivity;
 public class WordleActivity extends AppCompatActivity {
 
     private DatabaseHelper dbHelper;
-    private GridLayout wordleGrid;
-    private EditText etKelimeTahmini;
-    private TextView[][] cells = new TextView[6][5];
-
     private String targetWord = "";
     private int currentRow = 0;
+    private EditText etWordInput;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -28,118 +23,91 @@ public class WordleActivity extends AppCompatActivity {
         setContentView(R.layout.activity_wordle);
 
         dbHelper = new DatabaseHelper(this);
-        wordleGrid = findViewById(R.id.wordleGrid);
-        etKelimeTahmini = findViewById(R.id.etKelimeTahmini);
-        Button btnTahminEt = findViewById(R.id.btnTahminEt);
+        targetWord = dbHelper.getRandomWordleWord();
 
-        initGrid();
-        fetchRandomLearnedWord();
-
-        btnTahminEt.setOnClickListener(v -> {
-            String guess = etKelimeTahmini.getText().toString().toUpperCase().trim();
-
-            if (guess.length() != 5) {
-                Toast.makeText(this, "Sihirli sözcük tam 5 harfli olmalıdır!", Toast.LENGTH_SHORT).show();
-                return;
-            }
-
-            if (currentRow < 6) {
-                checkWordleGuess(guess);
-                etKelimeTahmini.setText("");
-            } else {
-                Toast.makeText(this, "Deneme hakkınız bitti. Doğru kelime: " + targetWord, Toast.LENGTH_LONG).show();
-            }
-        });
-    }
-
-
-    private void initGrid() {
-        for (int i = 0; i < 6; i++) {
-            for (int j = 0; j < 5; j++) {
-                TextView tv = new TextView(this);
-                tv.setWidth(120);
-                tv.setHeight(120);
-                tv.setTextSize(24f);
-                tv.setTextColor(Color.parseColor("#2C1E16")); // İçindeki harf rengi (Koyu Mürekkep)
-                tv.setGravity(Gravity.CENTER);
-                tv.setBackgroundColor(Color.parseColor("#A89F91")); // Varsayılan boş hücre rengi (Soluk gri/kahve)
-
-                GridLayout.LayoutParams params = new GridLayout.LayoutParams();
-                params.setMargins(8, 8, 8, 8);
-                tv.setLayoutParams(params);
-
-                cells[i][j] = tv;
-                wordleGrid.addView(tv);
-            }
-        }
-    }
-
-    /*
-     * UserWordProgress tablosu ile Words tablosu birleştirilerek (INNER JOIN) uzunluğu 5 olan
-     * ve listeye eklenmiş rastgele bir kelime çekilir.
-     */
-    private void fetchRandomLearnedWord() {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        String query = "SELECT w.EngWordName FROM Words w " +
-                "INNER JOIN UserWordProgress p ON w.WordID = p.WordID " +
-                "WHERE LENGTH(w.EngWordName) = 5 " +
-                "ORDER BY RANDOM() LIMIT 1";
-
-        Cursor cursor = db.rawQuery(query, null);
-        if (cursor.moveToFirst()) {
-            targetWord = cursor.getString(0).toUpperCase();
-        } else {
-            // Veritabanında 5 harfli öğrenilen kelime yoksa hata almamak için varsayılan atama (Fallback)
+        // Çökme Koruması: Veritabanında henüz 5 harfli kelime yoksa otomatik bir tane atanır
+        if (targetWord == null || targetWord.isEmpty()) {
+            Toast.makeText(this, "Uyarı: Veritabanında 5 harfli kelime yok!", Toast.LENGTH_LONG).show();
             targetWord = "MAGIC";
         }
-        cursor.close();
-    }
 
-    /*
-     * Opsiyonel anlık geri bildirim mekanizması: Harf tekrarlarını
-     * yanlış renklendirmemek için algoritma iki tur (double-pass) çalışır.
-     */
-    private void checkWordleGuess(String guess) {
-        boolean[] targetMatched = new boolean[5];
-        boolean[] guessMatched = new boolean[5];
+        etWordInput = findViewById(R.id.etWordInput);
 
-        // 1. Tur: Tam eşleşen (Harf doğru, Yer doğru) harfleri tespit edip Yeşil yapıyoruz.
-        for (int i = 0; i < 5; i++) {
-            cells[currentRow][i].setText(String.valueOf(guess.charAt(i)));
-            if (guess.charAt(i) == targetWord.charAt(i)) {
-                cells[currentRow][i].setBackgroundColor(Color.parseColor("#50C878"));
-                targetMatched[i] = true;
-                guessMatched[i] = true;
-            }
-        }
+        // Kullanıcı harf girdikçe sihirli kutulara anında yansıtılır (TextWatcher)
+        etWordInput.addTextChangedListener(new TextWatcher() {
+            @Override
+            public void beforeTextChanged(CharSequence s, int start, int count, int after) {}
 
-        // 2. Tur: Harf doğru ama yeri yanlış olanları Sarı, tamamen yanlış olanları Kırmızı yapıyoruz.
-        for (int i = 0; i < 5; i++) {
-            if (!guessMatched[i]) {
-                boolean isPartialMatch = false;
-                for (int j = 0; j < 5; j++) {
-                    if (!targetMatched[j] && guess.charAt(i) == targetWord.charAt(j)) {
-                        cells[currentRow][i].setBackgroundColor(Color.parseColor("#C0B283"));
-                        targetMatched[j] = true;
-                        guessMatched[i] = true;
-                        isPartialMatch = true;
-                        break;
+            @Override
+            public void onTextChanged(CharSequence s, int start, int before, int count) {
+                // Yazılan harfler anlık olarak o anki satıra dağıtılır
+                for (int i = 0; i < 5; i++) {
+                    TextView cell = getCell(currentRow, i);
+                    if (i < s.length()) {
+                        cell.setText(String.valueOf(s.charAt(i)).toUpperCase());
+                    } else {
+                        cell.setText(""); // Harf silinirse kutuyu da boşalt
                     }
                 }
+            }
 
-                // Eğer döngüde eşleşme bulunamadıysa bu harf kelimede hiç yoktur, Kırmızı yap.
-                if (!isPartialMatch) {
-                    cells[currentRow][i].setBackgroundColor(Color.parseColor("#B22222"));
+            @Override
+            public void afterTextChanged(Editable s) {}
+        });
+
+        // Klavyedeki Enter tuşuna basıldığında Doğru/Yanlış kontrolü yapılır
+        etWordInput.setOnEditorActionListener((v, actionId, event) -> {
+            if (actionId == EditorInfo.IME_ACTION_DONE ||
+                    (event != null && event.getKeyCode() == android.view.KeyEvent.KEYCODE_ENTER)) {
+
+                String guess = etWordInput.getText().toString().toUpperCase();
+                if (guess.length() == 5) {
+                    checkWord(guess);
+                } else {
+                    Toast.makeText(this, "Büyü yarım kaldı! Tam 5 harf girmelisin.", Toast.LENGTH_SHORT).show();
                 }
+                return true;
+            }
+            return false;
+        });
+    }
+    private void checkWord(String guess) {
+        String target = targetWord.toUpperCase();
+
+        for (int i = 0; i < 5; i++) {
+            TextView cell = getCell(currentRow, i);
+            char guessedChar = guess.charAt(i);
+
+            if (guessedChar == target.charAt(i)) {
+                // Doğru harf, doğru yer -> YEŞİL
+                cell.setBackgroundColor(Color.parseColor("#538D4E"));
+            } else if (target.contains(String.valueOf(guessedChar))) {
+                // Doğru harf, yanlış yer -> SARI
+                cell.setBackgroundColor(Color.parseColor("#B59F3B"));
+            } else {
+                // Harf kelimede yok -> KOYU GRİ
+                cell.setBackgroundColor(Color.parseColor("#3A3A3C"));
+            }
+            cell.setTextColor(Color.WHITE);
+        }
+
+        if (guess.equals(target)) {
+            Toast.makeText(this, "Tebrikler! Büyülü kelimeyi buldun.", Toast.LENGTH_LONG).show();
+            etWordInput.setEnabled(false); // Oyun kazanıldı, kutuyu kilitle
+        } else {
+            currentRow++;
+            etWordInput.setText(""); // Yeni satır için giriş kutusunu temizle
+
+            if (currentRow > 5) {
+                Toast.makeText(this, "Oyun Bitti! Doğru kelime: " + target, Toast.LENGTH_LONG).show();
+                etWordInput.setEnabled(false); // Haklar bitti, kutuyu kilitle
             }
         }
+    }
 
-        // Kelimenin tamamı doğru bilindiyse oyunu bitir ve tebrik mesajı göster.
-        if (guess.equals(targetWord)) {
-            Toast.makeText(this, "Tebrikler! Büyüyü çözdün.", Toast.LENGTH_LONG).show();
-            etKelimeTahmini.setEnabled(false); // Yeni tahmin yapılmasını engelle
-        }
-
-        currentRow++;
+    // Ekrandaki kutucukların ID'sini dinamik olarak bulan metot
+    private TextView getCell(int row, int col) {
+        int id = getResources().getIdentifier("cell_" + row + "_" + col, "id", getPackageName());
+        return findViewById(id);
     }
 }

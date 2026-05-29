@@ -9,43 +9,7 @@ import android.database.sqlite.SQLiteOpenHelper;
 public class DatabaseHelper extends SQLiteOpenHelper {
 
     private static final String DATABASE_NAME = "KelimeSihirbazi.db";
-    private static final int DATABASE_VERSION = 3;
-
-    // Tablo İsimleri
-    public static final String TABLE_USERS = "Users";
-    public static final String TABLE_WORDS = "Words";
-    public static final String TABLE_SAMPLES = "WordSamples";
-    public static final String TABLE_PROGRESS = "UserWordProgress";
-
-    /*
-     *SQL tablo şemaları.
-     * Foreign Key (Dış Anahtar) bağlantıları veri bütünlüğünü korumak için UserID ve WordID üzerinden kurulmuştur.
-     */
-    private static final String CREATE_TABLE_USERS = "CREATE TABLE " + TABLE_USERS + " ("
-            + "UserID INTEGER PRIMARY KEY AUTOINCREMENT, " // [cite: 8]
-            + "UserName TEXT UNIQUE, " // [cite: 8]
-            + "Password TEXT)"; // [cite: 8]
-
-    private static final String CREATE_TABLE_WORDS = "CREATE TABLE " + TABLE_WORDS + " ("
-            + "WordID INTEGER PRIMARY KEY AUTOINCREMENT, " // [cite: 12]
-            + "EngWordName TEXT, " // [cite: 12]
-            + "TurWordName TEXT, " // [cite: 12]
-            + "Picture TEXT)"; // Örn: C://words/yeri.jpeg formatındaki dosya yolu [cite: 12]
-
-    private static final String CREATE_TABLE_SAMPLES = "CREATE TABLE " + TABLE_SAMPLES + " ("
-            + "WordSamplesID INTEGER PRIMARY KEY AUTOINCREMENT, " // [cite: 13]
-            + "WordID INTEGER, " // [cite: 13]
-            + "Samples TEXT, " // [cite: 13]
-            + "FOREIGN KEY(WordID) REFERENCES " + TABLE_WORDS + "(WordID) ON DELETE CASCADE)";
-
-    private static final String CREATE_TABLE_PROGRESS = "CREATE TABLE " + TABLE_PROGRESS + " ("
-            + "ProgressID INTEGER PRIMARY KEY AUTOINCREMENT, "
-            + "UserID INTEGER, "
-            + "WordID INTEGER, "
-            + "Level INTEGER DEFAULT 0, "
-            + "NextReviewDate TEXT, "
-            + "FOREIGN KEY(UserID) REFERENCES " + TABLE_USERS + "(UserID) ON DELETE CASCADE, "
-            + "FOREIGN KEY(WordID) REFERENCES " + TABLE_WORDS + "(WordID) ON DELETE CASCADE)";
+    private static final int DATABASE_VERSION = 5;
 
     public DatabaseHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
@@ -53,111 +17,178 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
     @Override
     public void onCreate(SQLiteDatabase db) {
-        db.execSQL(CREATE_TABLE_USERS);
-        db.execSQL(CREATE_TABLE_WORDS);
-        db.execSQL(CREATE_TABLE_SAMPLES);
-        db.execSQL(CREATE_TABLE_PROGRESS);
+        String createUsersTable = "CREATE TABLE Users (" +
+                "UserID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "UserName TEXT, " +
+                "Password TEXT)";
+        db.execSQL(createUsersTable);
+
+        String createWordsTable = "CREATE TABLE Words (" +
+                "WordID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "EngWordName TEXT, " +
+                "TurWordName TEXT, " +
+                "Picture TEXT, " +
+                "Level INTEGER DEFAULT 0, " +
+                "NextDate TEXT, " +
+                "Topic TEXT DEFAULT 'Genel Kelimeler')";
+        db.execSQL(createWordsTable);
+
+        String createSamplesTable = "CREATE TABLE WordSamples (" +
+                "WordSamplesID INTEGER PRIMARY KEY AUTOINCREMENT, " +
+                "WordID INTEGER, " +
+                "Samples TEXT, " +
+                "FOREIGN KEY(WordID) REFERENCES Words(WordID))";
+        db.execSQL(createSamplesTable);
     }
 
     @Override
     public void onUpgrade(SQLiteDatabase db, int oldVersion, int newVersion) {
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_PROGRESS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_SAMPLES);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_WORDS);
-        db.execSQL("DROP TABLE IF EXISTS " + TABLE_USERS);
+        db.execSQL("DROP TABLE IF EXISTS Users");
+        db.execSQL("DROP TABLE IF EXISTS Words");
+        db.execSQL("DROP TABLE IF EXISTS WordSamples");
         onCreate(db);
-    }
-
-    public boolean addUser(String username, String password) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        ContentValues values = new ContentValues();
-        values.put("UserName", username);
-        values.put("Password", password);
-
-        long result = db.insert(TABLE_USERS, null, values);
-        return result != -1;
     }
 
     public boolean checkUser(String username, String password) {
         SQLiteDatabase db = this.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT * FROM " + TABLE_USERS + " WHERE UserName=? AND Password=?", new String[]{username, password});
+        Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE UserName = ? AND Password = ?", new String[]{username, password});
         boolean exists = cursor.getCount() > 0;
         cursor.close();
         return exists;
     }
 
-    public boolean addWord(String engWord, String turWord, String picturePath, String sampleText) {
-        SQLiteDatabase db = this.getWritableDatabase();
-        db.beginTransaction();
-        try {
-            ContentValues wordValues = new ContentValues();
-            wordValues.put("EngWordName", engWord);
-            wordValues.put("TurWordName", turWord);
-            wordValues.put("Picture", picturePath);
-
-            long wordId = db.insert(TABLE_WORDS, null, wordValues);
-
-            if (wordId != -1 && sampleText != null && !sampleText.trim().isEmpty()) {
-                ContentValues sampleValues = new ContentValues();
-                sampleValues.put("WordID", wordId);
-                sampleValues.put("Samples", sampleText);
-                db.insert(TABLE_SAMPLES, null, sampleValues);
-            }
-
-            db.setTransactionSuccessful();
-            return wordId != -1;
-        } finally {
-            db.endTransaction();
-        }
-    }
-
-    public Cursor getDueWords(String todayDate, int userId) {
-        SQLiteDatabase db = this.getReadableDatabase();
-        String query = "SELECT w.*, p.Level FROM " + TABLE_WORDS + " w " +
-                "INNER JOIN " + TABLE_PROGRESS + " p ON w.WordID = p.WordID " +
-                "WHERE p.NextReviewDate <= ? AND p.UserID = ?";
-        return db.rawQuery(query, new String[]{todayDate, String.valueOf(userId)});
-    }
-
-    public void updateWordProgress(int userId, int wordId, int level, String nextDate) {
+    public boolean updatePassword(String username, String newPassword) {
         SQLiteDatabase db = this.getWritableDatabase();
         ContentValues values = new ContentValues();
-        values.put("Level", level);
-        values.put("NextReviewDate", nextDate);
-
-        db.update(TABLE_PROGRESS, values, "UserID=? AND WordID=?", new String[]{String.valueOf(userId), String.valueOf(wordId)});
-        db.close();
+        values.put("Password", newPassword);
+        int rows = db.update("Users", values, "UserName = ?", new String[]{username});
+        return rows > 0;
     }
 
-    public String generateAnalysisReport(int userId) {
+    public boolean addUser(String username, String password) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        Cursor cursor = db.rawQuery("SELECT * FROM Users WHERE UserName = ?", new String[]{username});
+        if (cursor.getCount() > 0) {
+            cursor.close();
+            return false;
+        }
+        cursor.close();
+        ContentValues values = new ContentValues();
+        values.put("UserName", username);
+        values.put("Password", password);
+        return db.insert("Users", null, values) != -1;
+    }
+
+    public boolean addWord(String engWord, String turWord, String picturePath, String sampleSentence, int userId) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        ContentValues wordValues = new ContentValues();
+        wordValues.put("EngWordName", engWord);
+        wordValues.put("TurWordName", turWord);
+        wordValues.put("Picture", picturePath);
+        long wordId = db.insert("Words", null, wordValues);
+
+        if (wordId != -1 && sampleSentence != null && !sampleSentence.isEmpty()) {
+            ContentValues sampleValues = new ContentValues();
+            sampleValues.put("WordID", (int) wordId);
+            sampleValues.put("Samples", sampleSentence);
+            db.insert("WordSamples", null, sampleValues);
+        }
+        return wordId != -1;
+    }
+
+    // Konu bazlı yüzdesel başarı raporu üretilir
+    public String generateAnalysisReport() {
         SQLiteDatabase db = this.getReadableDatabase();
+        // Kelimeler konularına göre gruplanır; o konudaki kelime sayısı ve toplam seviye puanı çekilir
+        Cursor cursor = db.rawQuery("SELECT Topic, COUNT(*), SUM(Level) FROM Words GROUP BY Topic", null);
 
-        Cursor cursor = db.rawQuery("SELECT Level, COUNT(*) FROM " + TABLE_PROGRESS + " WHERE UserID=? GROUP BY Level", new String[]{String.valueOf(userId)});
-
-        int totalWords = 0;
-        int fullyLearned = 0;
         StringBuilder builder = new StringBuilder();
+        builder.append("BÜYÜ KİTABI ANALİZ RAPORU\n");
+        builder.append("=====================================\n\n");
+
+        boolean hasData = false;
+        int grandTotalWords = 0;
+        int grandTotalLevel = 0;
 
         while (cursor.moveToNext()) {
-            int level = cursor.getInt(0);
+            hasData = true;
+            String topic = cursor.getString(0);
             int count = cursor.getInt(1);
+            int sumLevel = cursor.getInt(2); // O konudaki tüm kelimelerin seviyeleri toplamı
 
-            totalWords += count;
-            if (level >= 6) {
-                fullyLearned += count;
-            }
+            grandTotalWords += count;
+            grandTotalLevel += sumLevel;
 
-            builder.append("Seviye ").append(level).append(" -> ").append(count).append(" Kelime\n");
+            int successRate = (int) (((float) sumLevel / (count * 6)) * 100);
+
+            builder.append("Konu: ").append(topic != null ? topic : "Genel Kelimeler").append("\n");
+            builder.append("Kelime Sayısı: ").append(count).append("\n");
+            builder.append("Konu Başarısı: %").append(successRate).append("\n");
+            builder.append("-------------------------------------\n");
         }
         cursor.close();
 
-        if (totalWords == 0) {
-            return "Henüz yeterli veri yok.";
+        if (!hasData) return "Büyü kitabında henüz analiz edilecek kelime yok.";
+
+        // Tüm konuların genel başarı ortalaması
+        int overallSuccess = (int) (((float) grandTotalLevel / (grandTotalWords * 6)) * 100);
+        builder.append("\nGENEL BÜYÜCÜLÜK BAŞARISI: %").append(overallSuccess);
+
+        return builder.toString();
+    }
+    public String getRandomWordleWord() {
+        SQLiteDatabase db = this.getReadableDatabase();
+        String targetWord = "";
+        Cursor cursor = db.rawQuery("SELECT EngWordName FROM Words WHERE length(EngWordName) = 5 ORDER BY RANDOM() LIMIT 1", null);
+        if (cursor.moveToFirst()) targetWord = cursor.getString(0);
+        cursor.close();
+        return targetWord;
+    }
+
+    public android.database.Cursor getExamWords(int yeniKelimeLimiti) {
+        android.database.sqlite.SQLiteDatabase db = this.getReadableDatabase();
+
+        String query = "SELECT * FROM (SELECT WordID, EngWordName, TurWordName FROM Words WHERE Level > 0 AND Level < 6 AND NextDate <= date('now', 'localtime')) " +
+                "UNION ALL " +
+                "SELECT * FROM (SELECT WordID, EngWordName, TurWordName FROM Words WHERE Level = 0 OR NextDate IS NULL ORDER BY RANDOM() LIMIT ?)";
+
+        return db.rawQuery(query, new String[]{String.valueOf(yeniKelimeLimiti)});
+    }
+
+    public void updateWordLevel(int wordId, boolean isCorrect) {
+        SQLiteDatabase db = this.getWritableDatabase();
+        if (isCorrect) {
+            String updateQuery = "UPDATE Words SET Level = Level + 1, " +
+                    "NextDate = CASE Level " +
+                    "WHEN 0 THEN date('now', 'localtime', '+1 day') " +
+                    "WHEN 1 THEN date('now', 'localtime', '+7 days') " +
+                    "WHEN 2 THEN date('now', 'localtime', '+1 month') " +
+                    "WHEN 3 THEN date('now', 'localtime', '+3 months') " +
+                    "WHEN 4 THEN date('now', 'localtime', '+6 months') " +
+                    "WHEN 5 THEN date('now', 'localtime', '+1 year') " +
+                    "ELSE date('now', 'localtime', '+1 year') END " +
+                    "WHERE WordID = ? AND Level < 6";
+            db.execSQL(updateQuery, new Object[]{wordId});
+        } else {
+            db.execSQL("UPDATE Words SET Level = 0, NextDate = date('now', 'localtime', '+1 day') WHERE WordID = ?", new Object[]{wordId});
         }
+    }
 
-        int successRate = (fullyLearned * 100) / totalWords;
+    public java.util.ArrayList<String> getRandomWrongAnswers(int excludeWordId) {
+        java.util.ArrayList<String> wrongAnswers = new java.util.ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT TurWordName FROM Words WHERE WordID != ? ORDER BY RANDOM() LIMIT 3", new String[]{String.valueOf(excludeWordId)});
+        while (cursor.moveToNext()) wrongAnswers.add(cursor.getString(0));
+        cursor.close();
+        return wrongAnswers;
+    }
 
-        return "Genel Başarı Yüzdesi: %" + successRate + "\n\n" +
-                "Seviye Dağılımı:\n" + builder.toString();
+    public java.util.List<String> getAllWordsForChain() {
+        java.util.List<String> words = new java.util.ArrayList<>();
+        SQLiteDatabase db = this.getReadableDatabase();
+        Cursor cursor = db.rawQuery("SELECT EngWordName FROM Words ORDER BY Level DESC", null);
+        while (cursor.moveToNext()) words.add(cursor.getString(0).toUpperCase());
+        cursor.close();
+        return words;
     }
 }

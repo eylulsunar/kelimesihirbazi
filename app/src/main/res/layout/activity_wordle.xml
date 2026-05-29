@@ -1,54 +1,94 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:orientation="vertical"
-    android:background="#F4EBD0"
-    android:gravity="center"
-    android:padding="16dp">
+    android:background="#1A110D">
+    <LinearLayout
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:orientation="vertical"
+        android:gravity="center"
+        android:layout_centerInParent="true">
 
     <TextView
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:text="Sihirli Bulmaca"
-        android:textColor="#2C1E16"
+        android:textColor="#D4AF37"
         android:textSize="32sp"
         android:fontFamily="@font/merienda_light"
-        android:layout_marginBottom="32dp"/>
+        android:layout_marginBottom="8dp" />
+
+    <TextView
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:text="5 harfli kelimenizi aşağıdaki kutuya yazın"
+        android:textColor="#8B7355"
+        android:textSize="14sp"
+        android:fontFamily="@font/merienda_light"
+        android:layout_marginBottom="16dp" />
+
+    <EditText
+        android:id="@+id/etWordInput"
+        android:layout_width="200dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="24dp"
+        android:background="#3E2723"
+        android:textColor="#E5D3B3"
+        android:textSize="20sp"
+        android:textStyle="bold"
+        android:gravity="center"
+        android:hint="Buraya Yazın"
+        android:textColorHint="#8B7355"
+        android:maxLength="5"
+        android:inputType="textNoSuggestions|textCapCharacters"
+        android:imeOptions="actionDone"
+        android:lines="1"
+        android:maxLines="1" />
 
     <GridLayout
-        android:id="@+id/wordleGrid"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:columnCount="5"
-        android:rowCount="6"
-        android:layout_gravity="center">
-    </GridLayout>
+        android:rowCount="6">
 
-    <EditText
-        android:id="@+id/etKelimeTahmini"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:hint="5 Harfli Tahmininizi Yazın"
-        android:textColorHint="#8D6E63"
-        android:textColor="#2C1E16"
-        android:background="@null"
-        android:fontFamily="@font/merienda_light"
-        android:textSize="18sp"
-        android:inputType="textCapCharacters"
-        android:maxLength="5"
-        android:gravity="center"
-        android:layout_marginTop="32dp"
-        android:layout_marginBottom="16dp"/>
+            <TextView android:id="@+id/cell_0_0" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_0_1" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_0_2" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_0_3" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_0_4" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
 
-    <Button
-        android:id="@+id/btnTahminEt"
-        android:layout_width="match_parent"
-        android:layout_height="60dp"
-        android:text="Tahmini Gönder"
-        android:textColor="#F4EBD0"
-        android:backgroundTint="#2C1E16"
-        android:fontFamily="@font/merienda_light"
-        android:textSize="18sp" />
+            <TextView android:id="@+id/cell_1_0" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_1_1" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_1_2" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_1_3" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_1_4" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
 
-</LinearLayout>
+            <TextView android:id="@+id/cell_2_0" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_2_1" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_2_2" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_2_3" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_2_4" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+
+            <TextView android:id="@+id/cell_3_0" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_3_1" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_3_2" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_3_3" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_3_4" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+
+            <TextView android:id="@+id/cell_4_0" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_4_1" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_4_2" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_4_3" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_4_4" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+
+            <TextView android:id="@+id/cell_5_0" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_5_1" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_5_2" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_5_3" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+            <TextView android:id="@+id/cell_5_4" android:layout_width="55dp" android:layout_height="55dp" android:layout_margin="4dp" android:background="#3E2723" android:gravity="center" android:textColor="#E5D3B3" android:textSize="24sp" android:textStyle="bold" />
+
+        </GridLayout>
+
+    </LinearLayout>
+</RelativeLayout>

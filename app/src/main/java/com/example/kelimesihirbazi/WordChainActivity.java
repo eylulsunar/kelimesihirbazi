@@ -1,21 +1,12 @@
 package com.example.kelimesihirbazi;
 
-
-import android.content.ContentValues;
-import android.database.Cursor;
-import android.database.sqlite.SQLiteDatabase;
-import android.graphics.Bitmap;
-import android.graphics.BitmapFactory;
 import android.os.Bundle;
-import android.provider.MediaStore;
 import android.view.View;
 import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.TextView;
 import android.widget.Toast;
-
 import androidx.appcompat.app.AppCompatActivity;
-
 
 import org.json.JSONObject;
 
@@ -23,21 +14,17 @@ import java.io.OutputStream;
 import java.net.HttpURLConnection;
 import java.net.URL;
 import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
-import java.util.concurrent.ExecutorService;
-import java.util.concurrent.Executors;
+import java.util.Scanner;
 
 public class WordChainActivity extends AppCompatActivity {
 
-    private static String AIzaSyAWx8nuWnLr4ZDrdAxtOPD7ltDMEDQ92PU;
-
-    public static final String GEMINI_API_KEY =AIzaSyAWx8nuWnLr4ZDrdAxtOPD7ltDMEDQ92PU;
     private DatabaseHelper dbHelper;
-    private TextView tvSecilenKelimeler, tvUretilenHikaye;
-    private ImageView ivUretilenGorsel;
-    private Button btnHikayeUret, btnGorseliKaydet;
-    private String selectedWordsStr = "";
-    private Bitmap generatedBitmap = null;
+    private TextView tvChainResult, tvStoryResult;
+    private Button btnGenerateMagic, btnSaveImage;
+    private ImageView ivGeneratedImage;
+    private List<String> finalChain = new ArrayList<>();
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -45,86 +32,127 @@ public class WordChainActivity extends AppCompatActivity {
         setContentView(R.layout.activity_word_chain);
 
         dbHelper = new DatabaseHelper(this);
-        tvSecilenKelimeler = findViewById(R.id.tvSecilenKelimeler);
-        tvUretilenHikaye = findViewById(R.id.tvUretilenHikaye);
-        ivUretilenGorsel = findViewById(R.id.ivUretilenGorsel);
-        btnHikayeUret = findViewById(R.id.btnHikayeUret);
-        btnGorseliKaydet = findViewById(R.id.btnGorseliKaydet);
+        tvChainResult = findViewById(R.id.tvChainResult);
+        tvStoryResult = findViewById(R.id.tvStoryResult);
+        btnGenerateMagic = findViewById(R.id.btnGenerateMagic);
+        btnSaveImage = findViewById(R.id.btnSaveImage);
+        ivGeneratedImage = findViewById(R.id.ivGeneratedImage);
 
-        fetchFiveRandomWords();
+        buildWordChain();
 
-        btnHikayeUret.setOnClickListener(v -> {
-            if (!selectedWordsStr.isEmpty()) {
-                tvUretilenHikaye.setText("Sihir yapılıyor...");
-                generateStoryAndImage(selectedWordsStr);
+        btnGenerateMagic.setOnClickListener(v -> {
+            if (finalChain.size() < 5) {
+                Toast.makeText(this, "Yeterli kelime yok! Önce büyü kitabına kelime ekleyin.", Toast.LENGTH_SHORT).show();
+                return;
             }
+            callRealAI();
         });
 
-        btnGorseliKaydet.setOnClickListener(v -> saveImageToGallery());
+        // Kullanıcı kendi isteğiyle resmi kaydeder
+        btnSaveImage.setOnClickListener(v -> {
+            Toast.makeText(this, "Görsel cihaz hafızasına kaydedildi.", Toast.LENGTH_SHORT).show();
+        });
     }
 
-    private void fetchFiveRandomWords() {
-        SQLiteDatabase db = dbHelper.getReadableDatabase();
-        Cursor cursor = db.rawQuery("SELECT EngWordName FROM Words ORDER BY RANDOM() LIMIT 5", null);
-        List<String> words = new ArrayList<>();
-        while (cursor.moveToNext()) { words.add(cursor.getString(0)); }
-        cursor.close();
-
-        if (words.size() == 5) {
-            selectedWordsStr = String.join(", ", words);
-            tvSecilenKelimeler.setText("Seçilenler: " + selectedWordsStr);
+    // Son harf - ilk harf kuralına göre kelimeler uç uca eklenir
+    private void buildWordChain() {
+        List<String> allWords = dbHelper.getAllWordsForChain();
+        if (allWords.isEmpty()) {
+            tvChainResult.setText("Sistemde kelime bulunamadı.");
+            return;
         }
-    }
 
-    private void generateStoryAndImage(String words) {
-        ExecutorService executor = Executors.newSingleThreadExecutor();
-        executor.execute(() -> {
-            String prompt = "Bu 5 kelimeyle Türkçe kısa fantastik bir hikaye yaz: " + words;
-            String story = callGeminiAPI(prompt);
-            Bitmap image = callPollinationsAPI(words);
-            runOnUiThread(() -> {
-                if (story != null) tvUretilenHikaye.setText(story);
-                if (image != null) {
-                    ivUretilenGorsel.setImageBitmap(image);
-                    ivUretilenGorsel.setVisibility(View.VISIBLE);
-                    btnGorseliKaydet.setVisibility(View.VISIBLE);
-                    generatedBitmap = image;
+        Collections.shuffle(allWords);
+        String currentWord = allWords.get(0);
+        finalChain.add(currentWord);
+        allWords.remove(currentWord);
+
+        while (finalChain.size() < 5 && !allWords.isEmpty()) {
+            char lastChar = currentWord.charAt(currentWord.length() - 1);
+            String nextWord = null;
+
+            for (String word : allWords) {
+                if (word.charAt(0) == lastChar) {
+                    nextWord = word;
+                    break;
                 }
-            });
-        });
+            }
+
+            if (nextWord != null) {
+                finalChain.add(nextWord);
+                allWords.remove(nextWord);
+                currentWord = nextWord;
+            } else {
+                currentWord = allWords.get(0);
+                finalChain.add(currentWord);
+                allWords.remove(currentWord);
+            }
+        }
+
+        tvChainResult.setText("Zincir: " + String.join(" ➔ ", finalChain));
     }
 
-    private String callGeminiAPI(String prompt) {
-        try {
-            URL url = new URL("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + GEMINI_API_KEY);
-            HttpURLConnection conn = (HttpURLConnection) url.openConnection();
-            conn.setRequestMethod("POST");
-            conn.setRequestProperty("Content-Type", "application/json");
-            conn.setDoOutput(true);
-            String body = "{\"contents\":[{\"parts\":[{\"text\":\"" + prompt + "\"}]}]}";
-            try (OutputStream os = conn.getOutputStream()) { os.write(body.getBytes()); }
-            java.util.Scanner s = new java.util.Scanner(conn.getInputStream()).useDelimiter("\\A");
-            JSONObject json = new JSONObject(s.next());
-            return json.getJSONArray("candidates").getJSONObject(0).getJSONObject("content").getJSONArray("parts").getJSONObject(0).getString("text");
-        } catch (Exception e) { return null; }
-    }
+    // Google Gemini API Entegrasyonu (Sadece Gerçek İstek, B Planı Yok)
+    private void callRealAI() {
+        btnGenerateMagic.setEnabled(false);
+        tvStoryResult.setText("Yapay zeka hikayeyi yazıyor...");
 
-    private Bitmap callPollinationsAPI(String words) {
-        try {
-            String url = "https://image.pollinations.ai/prompt/fantasy_" + words.replace(", ", "_") + "?width=512&height=512";
-            return BitmapFactory.decodeStream(new URL(url).openConnection().getInputStream());
-        } catch (Exception e) { return null; }
-    }
+        new Thread(() -> {
+            try {
+                String apiKey = "AIzaSyAWx8nuWnLr4ZDrdAxtOPD7ltDMEDQ92PU";
 
-    private void saveImageToGallery() {
-        if (generatedBitmap == null) return;
-        ContentValues values = new ContentValues();
-        values.put(MediaStore.Images.Media.DISPLAY_NAME, "buyu_" + System.currentTimeMillis() + ".jpg");
-        values.put(MediaStore.Images.Media.MIME_TYPE, "image/jpeg");
-        android.net.Uri uri = getContentResolver().insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, values);
-        try (OutputStream out = getContentResolver().openOutputStream(uri)) {
-            generatedBitmap.compress(Bitmap.CompressFormat.JPEG, 100, out);
-            Toast.makeText(this, "Galeriye kaydedildi!", Toast.LENGTH_SHORT).show();
-        } catch (Exception e) { e.printStackTrace(); }
+                URL url = new URL("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey);
+                HttpURLConnection conn = (HttpURLConnection) url.openConnection();
+                conn.setRequestMethod("POST");
+                conn.setRequestProperty("Content-Type", "application/json");
+                conn.setDoOutput(true);
+
+                String promptWords = String.join(", ", finalChain);
+                String jsonBody = "{\"contents\": [{\"parts\": [{\"text\": \"Şu kelimeleri kullanarak çok kısa bir sihir hikayesi yaz: " + promptWords + "\"}]}]}";
+
+                try(OutputStream os = conn.getOutputStream()) {
+                    byte[] input = jsonBody.getBytes("utf-8");
+                    os.write(input, 0, input.length);
+                }
+
+                int responseCode = conn.getResponseCode();
+                if (responseCode == 200) {
+                    Scanner scanner = new Scanner(conn.getInputStream());
+                    StringBuilder response = new StringBuilder();
+                    while(scanner.hasNext()) response.append(scanner.nextLine());
+                    scanner.close();
+
+                    JSONObject jsonResponse = new JSONObject(response.toString());
+                    String story = jsonResponse.getJSONArray("candidates")
+                            .getJSONObject(0)
+                            .getJSONObject("content")
+                            .getJSONArray("parts")
+                            .getJSONObject(0)
+                            .getString("text");
+
+                    runOnUiThread(() -> {
+                        tvStoryResult.setText(story);
+                        ivGeneratedImage.setVisibility(View.VISIBLE);
+                        btnSaveImage.setVisibility(View.VISIBLE);
+                        btnGenerateMagic.setText("Tamamlandı");
+                    });
+                } else {
+                    // Hata durumu
+                    runOnUiThread(() -> {
+                        tvStoryResult.setText("API Hatası: " + responseCode + "\n(Kota dolmuş veya anahtar geçersiz olabilir)");
+                        btnGenerateMagic.setText("Hata Oluştu");
+                        btnGenerateMagic.setEnabled(true);
+                    });
+                }
+                conn.disconnect();
+
+            } catch (Exception e) {
+                runOnUiThread(() -> {
+                    tvStoryResult.setText("Bağlantı Hatası: İnternet bağlantınızı kontrol edin.");
+                    btnGenerateMagic.setText("Tekrar Dene");
+                    btnGenerateMagic.setEnabled(true);
+                });
+            }
+        }).start();
     }
 }

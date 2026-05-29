@@ -17,35 +17,32 @@ public class AddWordActivity extends AppCompatActivity {
 
         dbHelper = new DatabaseHelper(this);
 
-        EditText etEngWord = findViewById(R.id.etEngWord);
-        EditText etTurWord = findViewById(R.id.etTurWord);
-        EditText etSampleSentence = findViewById(R.id.etSampleSentence);
-        EditText etPicturePath = findViewById(R.id.etPicturePath);
-        Button btnKelimeKaydet = findViewById(R.id.btnKelimeKaydet);
 
-        btnKelimeKaydet.setOnClickListener(v -> {
-            String engWord = etEngWord.getText().toString().trim();
-            String turWord = etTurWord.getText().toString().trim();
-            String sampleSentence = etSampleSentence.getText().toString().trim();
-            String picturePath = etPicturePath.getText().toString().trim();
+        EditText etEng = findViewById(R.id.etEngWord);
+        EditText etTur = findViewById(R.id.etTurWord);
+        EditText etCumle = findViewById(R.id.etSampleSentence);
+        Button btnKaydet = findViewById(R.id.btnKelimeKaydet);
 
-            if (engWord.isEmpty() || turWord.isEmpty()) {
-                Toast.makeText(this, "İngilizce ve Türkçe sözcük alanları zorunludur.", Toast.LENGTH_SHORT).show();
-                return;
-            }
+        // Kullanıcı ID'sini oturumdan alıyoruz
+        int currentUserId = getSharedPreferences("Session", MODE_PRIVATE).getInt("aktifKullaniciID", 1);
 
-            // Transaction bloğu içeren veritabanı metodunu çağırarak Words ve WordSamples tablolarına eşzamanlı kayıt atıyoruz.
-            boolean basarili = dbHelper.addWord(engWord, turWord, picturePath, sampleSentence);
+        btnKaydet.setOnClickListener(v -> {
+            String eng = etEng.getText().toString().trim();
+            String tur = etTur.getText().toString().trim();
+            String cumle = etCumle.getText().toString().trim();
 
-            if (basarili) {
-                Toast.makeText(this, "Büyü başarıyla eklendi!", Toast.LENGTH_SHORT).show();
-                etEngWord.setText("");
-                etTurWord.setText("");
-                etSampleSentence.setText("");
-                etPicturePath.setText("");
-                etEngWord.requestFocus();
+            if (eng.isEmpty() || tur.isEmpty()) {
+                Toast.makeText(this, "İngilizce ve Türkçe alanlar boş bırakılamaz!", Toast.LENGTH_SHORT).show();
             } else {
-                Toast.makeText(this, "Büyü eklenirken bir hata oluştu.", Toast.LENGTH_SHORT).show();
+                // 5 parametreli metot çağrısı (DatabaseHelper ile eşleşti)
+                boolean basarili = dbHelper.addWord(eng, tur, "", cumle, currentUserId);
+
+                if (basarili) {
+                    Toast.makeText(this, "Büyü kütüphaneye eklendi!", Toast.LENGTH_SHORT).show();
+                    finish();
+                } else {
+                    Toast.makeText(this, "Hata oluştu, büyü eklenemedi.", Toast.LENGTH_SHORT).show();
+                }
             }
         });
     }

@@ -2,7 +2,7 @@
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    android:background="#F4EBD0"
+    android:background="#1A110D"
     android:padding="24dp">
 
     <LinearLayout
@@ -14,61 +14,61 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:text="Büyülü Zincir"
-            android:textColor="#2C1E16"
-            android:textSize="32sp"
+            android:text="Kelime Zinciri (Yapay Zeka)"
+            android:textColor="#D4AF37"
+            android:textSize="26sp"
             android:fontFamily="@font/merienda_light"
-            android:layout_marginBottom="16dp"/>
+            android:layout_marginBottom="24dp" />
 
         <TextView
-            android:id="@+id/tvSecilenKelimeler"
+            android:id="@+id/tvChainResult"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:text="Büyüler seçiliyor..."
-            android:textColor="#5D4037"
+            android:text="Zincir: Hazırlanıyor..."
+            android:textColor="#E5D3B3"
             android:textSize="18sp"
-            android:textStyle="italic"
-            android:textAlignment="center"
+            android:textStyle="bold"
+            android:gravity="center"
             android:fontFamily="@font/merienda_light"
-            android:layout_marginBottom="24dp"/>
+            android:layout_marginBottom="24dp" />
 
         <Button
-            android:id="@+id/btnHikayeUret"
+            android:id="@+id/btnGenerateMagic"
             android:layout_width="match_parent"
             android:layout_height="60dp"
             android:text="Hikaye ve Görsel Üret"
-            android:textColor="#F4EBD0"
-            android:backgroundTint="#2C1E16"
-            android:fontFamily="@font/merienda_light"
-            android:layout_marginBottom="24dp"/>
-
-        <TextView
-            android:id="@+id/tvUretilenHikaye"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:text=""
-            android:textColor="#2C1E16"
-            android:textSize="16sp"
-            android:fontFamily="@font/merienda_light"
-            android:layout_marginBottom="24dp"/>
-
-        <ImageView
-            android:id="@+id/ivUretilenGorsel"
-            android:layout_width="match_parent"
-            android:layout_height="300dp"
-            android:scaleType="centerCrop"
-            android:layout_marginBottom="16dp"
-            android:visibility="gone"/>
-
-        <Button
-            android:id="@+id/btnGorseliKaydet"
-            android:layout_width="match_parent"
-            android:layout_height="60dp"
-            android:text="Görseli Cihaza Kaydet"
             android:textColor="#1A110D"
             android:backgroundTint="#D4AF37"
             android:fontFamily="@font/merienda_light"
-            android:visibility="gone"/>
+            android:layout_marginBottom="24dp" />
+
+        <TextView
+            android:id="@+id/tvStoryResult"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text=""
+            android:textColor="#8B7355"
+            android:textSize="16sp"
+            android:fontFamily="@font/merienda_light"
+            android:layout_marginBottom="24dp" />
+
+        <ImageView
+            android:id="@+id/ivGeneratedImage"
+            android:layout_width="match_parent"
+            android:layout_height="250dp"
+            android:background="#3E2723"
+            android:visibility="gone"
+            android:layout_marginBottom="24dp"/>
+        <Button
+            android:id="@+id/btnSaveImage"
+            android:layout_width="match_parent"
+            android:layout_height="50dp"
+            android:text="Görseli Cihaza Kaydet"
+            android:textColor="#E5D3B3"
+            android:backgroundTint="#3E2723"
+            android:visibility="gone"
+            android:fontFamily="@font/merienda_light"
+            android:layout_marginBottom="24dp"/>
 
     </LinearLayout>
 </ScrollView>

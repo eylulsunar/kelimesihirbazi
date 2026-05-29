@@ -2,8 +2,11 @@
     <style name="Theme.KelimeSihirbazi" parent="Theme.MaterialComponents.DayNight.NoActionBar">
         <item name="colorPrimary">@color/magic_purple</item>
         <item name="colorSecondary">@color/silver_mist</item>
+
         <item name="android:windowBackground">@android:color/white</item>
+        <item name="android:textColor">@color/dark_ink</item>
     </style>
+
     <style name="MagicButtonStyle" parent="Widget.MaterialComponents.Button">
         <item name="android:backgroundTint">@color/magic_purple</item>
         <item name="strokeColor">@color/silver_mist</item>
