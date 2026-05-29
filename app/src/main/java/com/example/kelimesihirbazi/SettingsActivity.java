@@ -24,7 +24,7 @@ public class SettingsActivity extends AppCompatActivity {
 
         sharedPreferences = getSharedPreferences("AyarlarDosyasi", MODE_PRIVATE);
 
-        // Kullanıcı daha önce bir ayar yapmadıysa, proje gereksinim dokümanında istenen varsayılan 10 sayısını getirilir.
+        // Kullanıcı daha önce bir ayar yapmadıysa, varsayılan 10 sayısını getirilir.
         int mevcutLimit = sharedPreferences.getInt("gunlukLimit", 10);
         etKelimeLimiti.setText(String.valueOf(mevcutLimit));
 

@@ -104,7 +104,6 @@ public class DatabaseHelper extends SQLiteOpenHelper {
 
         StringBuilder builder = new StringBuilder();
         builder.append("BÜYÜ KİTABI ANALİZ RAPORU\n");
-        builder.append("=====================================\n\n");
 
         boolean hasData = false;
         int grandTotalWords = 0;

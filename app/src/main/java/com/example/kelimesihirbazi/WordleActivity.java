@@ -33,7 +33,7 @@ public class WordleActivity extends AppCompatActivity {
 
         etWordInput = findViewById(R.id.etWordInput);
 
-        // Kullanıcı harf girdikçe sihirli kutulara anında yansıtılır (TextWatcher)
+        // Kullanıcı harf girdikçe kutulara anında yansıtılır
         etWordInput.addTextChangedListener(new TextWatcher() {
             @Override
             public void beforeTextChanged(CharSequence s, int start, int count, int after) {}

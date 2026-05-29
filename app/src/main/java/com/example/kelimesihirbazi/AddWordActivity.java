@@ -23,7 +23,7 @@ public class AddWordActivity extends AppCompatActivity {
         EditText etCumle = findViewById(R.id.etSampleSentence);
         Button btnKaydet = findViewById(R.id.btnKelimeKaydet);
 
-        // Kullanıcı ID'sini oturumdan alıyoruz
+        // Kullanıcı ID'sini oturumdan alır
         int currentUserId = getSharedPreferences("Session", MODE_PRIVATE).getInt("aktifKullaniciID", 1);
 
         btnKaydet.setOnClickListener(v -> {
@@ -34,7 +34,7 @@ public class AddWordActivity extends AppCompatActivity {
             if (eng.isEmpty() || tur.isEmpty()) {
                 Toast.makeText(this, "İngilizce ve Türkçe alanlar boş bırakılamaz!", Toast.LENGTH_SHORT).show();
             } else {
-                // 5 parametreli metot çağrısı (DatabaseHelper ile eşleşti)
+                // 5 parametreli metot çağrısı
                 boolean basarili = dbHelper.addWord(eng, tur, "", cumle, currentUserId);
 
                 if (basarili) {

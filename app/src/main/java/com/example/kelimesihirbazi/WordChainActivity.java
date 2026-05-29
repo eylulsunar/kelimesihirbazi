@@ -92,16 +92,16 @@ public class WordChainActivity extends AppCompatActivity {
         tvChainResult.setText("Zincir: " + String.join(" ➔ ", finalChain));
     }
 
-    // Google Gemini API Entegrasyonu (Sadece Gerçek İstek, B Planı Yok)
+    // API Entegrasyonu
     private void callRealAI() {
         btnGenerateMagic.setEnabled(false);
         tvStoryResult.setText("Yapay zeka hikayeyi yazıyor...");
 
         new Thread(() -> {
             try {
-                String apiKey = "AIzaSyAWx8nuWnLr4ZDrdAxtOPD7ltDMEDQ92PU";
+                String apiKey = "AI.Ab8RN6Kes-juRVNWhKSDI-ol02lY";
 
-                URL url = new URL("https://generativelanguage.googleapis.com/v1beta/models/gemini-1.5-flash:generateContent?key=" + apiKey);
+                URL url = new URL("https://generativelanguage.googleapis.com/v1beta/models/gemini-pro:generateContent?key=" + apiKey);
                 HttpURLConnection conn = (HttpURLConnection) url.openConnection();
                 conn.setRequestMethod("POST");
                 conn.setRequestProperty("Content-Type", "application/json");
